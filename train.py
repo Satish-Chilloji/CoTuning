@@ -31,15 +31,15 @@ def get_configs():
     parser.add_argument('--seed', type=int, default=2020)
 
     parser.add_argument('--batch_size', default=48, type=int)
-    parser.add_argument('--total_iter', default=9050, type=int)
+    parser.add_argument('--total_iter', default=2050, type=int)
     parser.add_argument('--eval_iter', default=1000, type=int)
-    parser.add_argument('--save_iter', default=9000, type=int)
+    parser.add_argument('--save_iter', default=2000, type=int)
     parser.add_argument('--print_iter', default=100, type=int)
 
     # dataset
-    parser.add_argument('--data_path', default="/data/finetune/cub200",
+    parser.add_argument('--data_path', default="/content/drive/My Drive/AML/CoTuning/",
                         type=str, help='Path of dataset')
-    parser.add_argument('--class_num', default=200,
+    parser.add_argument('--class_num', default=102,
                         type=int, help='number of classes')
     parser.add_argument('--num_workers', default=2, type=int,
                         help='Num of workers used in dataloading')
@@ -88,23 +88,22 @@ def get_data_loader(configs):
 
     # build dataset
     train_dataset = datasets.ImageFolder(
-        os.path.join(configs.data_path, 'train'),
+        os.path.join(configs.data_path, 'flower-102/dataset/train'),
         transform=data_transforms['train'])
     determin_train_dataset = datasets.ImageFolder(
-        os.path.join(configs.data_path, 'train'),
+        os.path.join(configs.data_path, 'flower-102/dataset/train'),
         transform=data_transforms['val'])
     val_dataset = datasets.ImageFolder(
-        os.path.join(configs.data_path, 'val'),
+        os.path.join(configs.data_path, 'flower-102/dataset/valid'),
         transform=data_transforms['val'])
     test_datasets = {
         'test' + str(i):
             datasets.ImageFolder(
-                os.path.join(configs.data_path, 'test'),
+                os.path.join(configs.data_path, 'flower-102/dataset/valid'),
                 transform=data_transforms["test" + str(i)]
         )
         for i in range(10)
     }
-
     # build dataloader
     train_loader = DataLoader(train_dataset, batch_size=configs.batch_size, shuffle=True,
                               num_workers=configs.num_workers, pin_memory=True)
